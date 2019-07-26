@@ -1,0 +1,92 @@
+<template>
+  <div>
+    <Dropdownmenu v-on:childToParent = 'onChildClick'></Dropdownmenu>
+    <ve-line
+    :data="chartData" 
+    :settings="chartSettings"
+    :loading="loading"
+    :data-zoom="dataZoom"
+    :data-empty="dataEmpty">
+    </ve-line>
+  </div>
+</template>
+
+<script>
+  import axios from 'axios';
+  import 'v-charts/lib/style.css';
+  import Dropdownmenu from './Dropdownmenu';
+
+ const DATA_FROM_BACKEND = {
+    columns: [],
+    rows: [],
+  };
+
+  export default {
+  data() {
+    this.chartSettings = {
+      metrics: ['VarValue'],
+      dimension: ['TimeString'],
+      };
+  return {
+      chartData: {
+        columns: [],
+        rows: [],
+      },
+      loading: false,
+      dataEmpty: false,
+    };
+  },
+  methods: {
+      onChildClick(value) {
+        console.log(value);
+        //  const starttim = value[0][0].toISOstring();
+        const startdate = value[0][0].toISOString();
+        const enddate = value[0][1].toISOString();
+        this.getData({
+            __sort: '-VarName',
+            TimeString__gte: startdate,
+            TimeString__lte: enddate,
+          });
+      },
+    getData(params) {
+      this.loading = true;
+
+      axios.get(`http://${localStorage.ip}:${localStorage.port}/api/Produzione1H`, {
+          params: params, // eslint-disable-line object-shorthand
+        })
+        .then((response) => {
+          DATA_FROM_BACKEND.columns = [
+          'TimeString', 'VarValue', 
+        ];
+        DATA_FROM_BACKEND.rows = response.data.data;
+        console.log(DATA_FROM_BACKEND);
+      });
+        setTimeout(() => {
+          this.chartData = DATA_FROM_BACKEND;
+          this.dataEmpty = !this.chartData.rows.length;
+          this.loading = false;
+        }, 1000);
+    },
+  },
+  created() {
+    this.getData({
+            __sort: 'TimeString',
+            __limit: 100,
+    });
+
+    this.dataZoom = [
+      {
+        type: 'slider',
+        start: 0,
+         end: 100,
+      },
+    ]; 
+  },
+  components: {
+    Dropdownmenu,
+},
+};
+</script>
+<style>
+</style>
+
