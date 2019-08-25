@@ -8,12 +8,19 @@
     :data-empty="dataEmpty">
     </ve-histogram>
     <span> Il tempo totale di fermo nel periodo selezionato e' {{ TempoTotale }} secondi ovvero 
-      circa {{ minuti }} minuti</span>   
+      circa {{ minuti }} minuti.</span>
+    <vs-divider/>
+    <vue-good-table
+    :rows="rows"
+    :columns="columns"/>
+   
   </div>
 </template>
 
 <script>
+  import { VueGoodTable } from 'vue-good-table';
   import axios from 'axios';
+  import 'vue-good-table/dist/vue-good-table.css';
   import 'v-charts/lib/style.css';
   import { mapState } from 'vuex';
   import Dropdownmenu from './Dropdownmenu';
@@ -34,6 +41,29 @@
         yAxisName: ['occorenze', 'percentuali fermo'],
       };
   return {
+     isLoading: false,
+      columns: [
+        {
+          label: 'Numero Allarme',
+          field: 'num',
+          type: 'number',
+        },
+        {
+          label: 'Testo Allarme',
+          field: 'text',              
+        },
+        {
+          label: 'Percentuale incidenza',
+          field: 'perc',
+          type: 'percentage',
+        },
+        {
+          label: 'Occorrenze',
+          field: 'occ',
+          type: 'number',
+        },
+      ],
+      rows: [],
       chartData: {
         columns: [],
         rows: [],
@@ -102,6 +132,7 @@
           'text', 'occ', 'perc',
         ];
         DATA_FROM_BACKEND.rows = arrval;
+        this.rows = arrval;
         console.log(perc);
         this.TempoTotale = Math.round(perc / 1000);
         this.minuti = Math.round(this.TempoTotale / 60);
@@ -121,6 +152,7 @@
     });
   },
   components: {
+    VueGoodTable,
     Dropdownmenu,
 },
 };
