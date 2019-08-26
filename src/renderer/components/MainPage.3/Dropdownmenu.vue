@@ -20,6 +20,9 @@
               <vs-select-item :key="index" :value="item.value" :text="item.text" v-for="item,index in options2" />
             </vs-select>
           </vs-col>
+          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
+            <vs-button color="primary" type="border" icon="print" v-on:click="print"></vs-button>
+          </vs-col>
         </vs-row>
       </vs-collapse-item>
     </vs-collapse>
@@ -49,8 +52,7 @@
             };
           },
           mounted() {
-            console.log('test');              
-            this.loadItems();
+           this.loadItems();
           },
           methods: {
             loadItems() {                  
@@ -86,6 +88,10 @@
               this.select3 = (this.select3.length === 0) ? '' : this.select3;
               this.$emit('childToParent', [this.select2, this.select3]);
             },
+
+             print() {
+              window.print();
+            },           
            },
         };
 </script>

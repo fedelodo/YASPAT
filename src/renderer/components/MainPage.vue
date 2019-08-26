@@ -1,4 +1,5 @@
 <template>
+<vs-row>
     <vs-tabs alignment="fixed">
       <vs-tab label="Tabella">
         <div>
@@ -11,6 +12,7 @@
         </div>
       </vs-tab>
     </vs-tabs>
+</vs-row>
 </template>
 
 <script>

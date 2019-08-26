@@ -7,7 +7,10 @@
        </div>
         <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
           <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
-            <date-picker label="Date" v-on:clear="clear" v-on:change="changed" v-model="time1" append-to-body range lang="it" format="YYYY-MM-DDTHH:mm:ss"></date-picker>
+            <date-picker label="Date" v-on:clear="clear" v-on:change="changed" v-model="time1" append-to-body range lang="it" format="YYYY-MM-DDTHH:mm:ss" type="datetime"></date-picker>
+          </vs-col>
+         <vs-col  vs-type="flex" vs-justify="center" vs-align="center">
+            <vs-button color="primary" type="border" icon="print" v-on:click="print"></vs-button>
           </vs-col>
         </vs-row>
       </vs-collapse-item>
@@ -75,6 +78,10 @@ import DatePicker from 'vue2-datepicker';
               this.select2 = (this.select2.length === 0) ? '' : this.select2;
               this.select3 = (this.select3.length === 0) ? '' : this.select3;
               this.$emit('childToParent', [this.select2, this.select3]);
+            },
+
+            print() {
+              window.print();
             },
            },
         };
