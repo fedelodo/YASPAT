@@ -148,6 +148,7 @@
   },
   created() {
     this.getData({
+      __sort: '-TimeString',
       __limit: 100,
     });
   },

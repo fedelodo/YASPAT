@@ -57,8 +57,9 @@
               rows: [],
               totalRecords: 0,
               serverParams: {
+                __sort: '-TimeString',
                 __offset: 1, 
-                __limit: 10,
+                __limit: 100,
               },
             }; 
           },
