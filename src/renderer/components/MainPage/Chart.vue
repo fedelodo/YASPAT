@@ -108,7 +108,7 @@
                 (temp[num] = time); 
               } else {
                 result[num].tim = (num in temp)
-                  ? (result[num].tim || 0) + (time - temp[num])
+                  ? (result[num].tim || 0) + Math.abs(time - temp[num])
                   : null; 
             } 
             result[num].occ = (result[num].occ || 0) + 1;

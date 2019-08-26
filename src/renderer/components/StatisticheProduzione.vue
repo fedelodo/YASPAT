@@ -1,11 +1,6 @@
 <template>
   <div>
      <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
-       <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
-         <p>NOTA: La funzionalità è ancora sperimentale si sconsiglia di selezionare lunghi periodi
-           se si vogliono evitare lunghi tempi di attesa.
-         </p>
-       </vs-col>
           <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
             <date-picker label="Date" 
              v-on:change="changed" 
