@@ -5,8 +5,7 @@
     :data="chartData" 
     :settings="chartSettings"
     :loading="loading"
-    :data-zoom="dataZoom"
-    :data-empty="dataEmpty">
+    :data-zoom="dataZoom">
     </ve-line>
   </div>
 </template>
@@ -36,8 +35,8 @@
   methods: {
       onChildClick(value) {
         //  const starttim = value[0][0].toISOstring();
-        const startdate = value[0][0].toISOString();
-        const enddate = value[0][1].toISOString();
+        const startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
+        const enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
         this.getData({
             __sort: '-TimeString',
             TimeString__gte: startdate,
@@ -79,7 +78,7 @@
   },
   created() {
     this.getData({
-            __sort: 'TimeString',
+            __sort: '-TimeString',
             __limit: 100,
     });
 

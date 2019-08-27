@@ -13,6 +13,8 @@
 
 <script>
   import axios from 'axios';
+  import _ from 'lodash';
+  import moment from 'moment';
   import 'v-charts/lib/style.css';
   import Dropdownmenu from './Dropdownmenu';
 
@@ -24,7 +26,6 @@
   export default {
   data() {
     this.chartSettings = {
-      metrics: ['VarValue'],
       dimension: ['TimeString'],
       };
   return {
@@ -40,10 +41,10 @@
       onChildClick(value) {
         console.log(value);
         //  const starttim = value[0][0].toISOstring();
-        const startdate = value[0][0].toISOString();
-        const enddate = value[0][1].toISOString();
+        const startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
+        const enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
         this.getData({
-            __sort: '-VarName',
+            __sort: '-TimeString',
             TimeString__gte: startdate,
             TimeString__lte: enddate,
           });
@@ -55,11 +56,23 @@
           params: params, // eslint-disable-line object-shorthand
         })
         .then((response) => {
-          DATA_FROM_BACKEND.columns = [
-          'TimeString', 'VarValue', 
-        ];
-        DATA_FROM_BACKEND.rows = response.data.data;
-        console.log(DATA_FROM_BACKEND);
+         const col = new Set(['TimeString']);
+            // TODO UNIRE GLI OGGETTI CON LO STESSO TIMESTRING
+            let rows = (response.data.data.map((element) => {
+              const { VarName, VarValue, ...rest } = element;
+              col.add(VarName);
+              return { 
+                ...rest,
+                [VarName]: VarValue,
+                };
+              }));
+            rows = _(rows).groupBy('TimeString').map((g) => _.mergeWith({}, ...g, (obj, src) =>
+             _.isArray(obj) ? obj.concat(src) : undefined))
+              .value();
+          console.log(rows);
+
+            DATA_FROM_BACKEND.rows = rows.reverse();
+            DATA_FROM_BACKEND.columns = [...col];
       });
         setTimeout(() => {
           this.chartData = DATA_FROM_BACKEND;
@@ -70,7 +83,7 @@
   },
   created() {
     this.getData({
-            __sort: 'TimeString',
+            __sort: '-TimeString',
             __limit: 100,
     });
 

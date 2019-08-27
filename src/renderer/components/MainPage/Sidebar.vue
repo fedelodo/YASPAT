@@ -6,14 +6,14 @@
                  </vs-button>
     <vs-sidebar parent="body" default-index="1"  color="primary" class="sidebarx" spacer v-model="active">
 
-      <div class="header-sidebar" slot="header">
+      <!-- <div class="header-sidebar" slot="header">
         <vs-avatar  size="70px" src="~@/assets/logo.png"/>
 
         <h4>
           Nuova Star
         </h4>
 
-      </div>
+      </div> -->
        <vs-sidebar-item v-show="Statistiche" :to="{ name: 'Statistiche'}" index="1" icon="score">
           Statistiche Produzione
         </vs-sidebar-item>

@@ -22,6 +22,7 @@
 <script>
   import { VueGoodTable } from 'vue-good-table';
   import axios from 'axios';
+  import moment from 'moment';
   import 'vue-good-table/dist/vue-good-table.css';
   import Dropdownmenu from './Dropdownmenu';
 
@@ -68,16 +69,16 @@
                console.log(value);
                 //  const starttim = value[0][0].toISOstring();
                 if (value[1] || value[1].length !== 0) {
-                  const startdate = value[0][0].toISOString();
-                  const enddate = value[0][1].toISOString();
+                  const startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
+                  const enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
                   this.updateParams({
                     TimeString__gte: startdate,
                     TimeString__lte: enddate, 
                     VarName: value[1],
                   });
                 } else if (!value[1] || value[1].length === 0) { 
-                  const startdate = value[0][0].toISOString();
-                  const enddate = value[0][1].toISOString();
+                  const startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
+                  const enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
                   this.updateParams({
                     TimeString__gte: startdate,
                     TimeString__lte: enddate, 

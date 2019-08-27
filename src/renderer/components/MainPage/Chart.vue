@@ -7,8 +7,8 @@
     :loading="loading"
     :data-empty="dataEmpty">
     </ve-histogram>
-    <span> Il tempo totale di fermo nel periodo selezionato e' {{ TempoTotale }} secondi ovvero 
-      circa {{ minuti }} minuti.</span>
+    <!-- <span> Il tempo totale di fermo nel periodo selezionato e' {{ TempoTotale }} secondi ovvero 
+      circa {{ minuti }} minuti.</span> -->
     <vs-divider/>
     <vue-good-table
     :rows="rows"
@@ -20,6 +20,7 @@
 <script>
   import { VueGoodTable } from 'vue-good-table';
   import axios from 'axios';
+  import moment from 'moment';
   import 'vue-good-table/dist/vue-good-table.css';
   import 'v-charts/lib/style.css';
   import { mapState } from 'vuex';
@@ -78,14 +79,14 @@
       onChildClick(value) {
         console.log(value);
         //  const starttim = value[0][0].toISOstring();
-        const startdate = value[0][0].toISOString();
-        const enddate = value[0][1].toISOString();
+        const startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
+        const enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
         this.getData({
-            __sort: '-MsgText',
-            TimeString__gte: startdate,
-            TimeString__lte: enddate,
-            MsgNumber: value[1], 
-            MsgText: value[2],
+          __sort: '-TimeString',
+          TimeString__gte: startdate,
+          TimeString__lte: enddate, 
+          VarValue: value[1], 
+          VarName: value[2],
           });
       },
     getData(params) {
@@ -126,7 +127,10 @@
           return totaltim; 
          }, []);
 
-       arrval.forEach((element) => { element.perc = (element.tim / perc); });
+       arrval.forEach((element) => { 
+         element.perc = (element.tim / perc);
+         element.occ /= 2;
+         });
 
         DATA_FROM_BACKEND.columns = [
           'text', 'occ', 'perc',

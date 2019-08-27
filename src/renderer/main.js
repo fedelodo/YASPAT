@@ -13,12 +13,12 @@ import App from './App';
 import router from './router';
 import store from './store';
 
+Vue.use(require('vue-moment'));
 Vue.use(Vuesax);
 Vue.use(VCharts);
 Vue.use(Vuex);
 
 if (!process.env.IS_WEB) {
-  Vue.use(require('vue-devtools').install());
   Vue.use(require('vue-electron'));
 }
 
