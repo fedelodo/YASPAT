@@ -31,12 +31,12 @@ function createWindow() {
     mainWindow = null;
   });
 
-  if (process.env.NODE_ENV !== 'production') {
-    require('vue-devtools').install();
-  }
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow();
+  autoUpdater.checkForUpdates();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -60,9 +60,5 @@ app.on('activate', () => {
 
 autoUpdater.on('update-downloaded', () => {
   autoUpdater.quitAndInstall();
-});
-
-app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdatesAndNotify();
 });
 
