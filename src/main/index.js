@@ -40,7 +40,11 @@ function createWindow() {
 app.on('ready', () => {
   autoUpdater.logger = log;
   createWindow();
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates();
+  if (process.env.NODE_ENV === 'production') {
+    setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, 60000);
+  } 
 });
 
 app.on('window-all-closed', () => {
