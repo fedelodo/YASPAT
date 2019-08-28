@@ -1,4 +1,5 @@
-import { app, BrowserWindow, autoUpdater, dialog } from 'electron' // eslint-disable-line
+import { app, BrowserWindow,  dialog } from 'electron';
+import { autoUpdater } from 'electron-updater';
 const log = require('electron-log');
 
 autoUpdater.logger = log;
@@ -43,9 +44,7 @@ function createWindow() {
 
 app.on('ready', () => {
   createWindow();
-  if (process.env.NODE_ENV === 'production') {
-      autoUpdater.checkForUpdates();
-  }  
+  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates();
 });
 
 app.on('window-all-closed', () => {
