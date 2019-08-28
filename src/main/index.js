@@ -44,9 +44,7 @@ function createWindow() {
 app.on('ready', () => {
   createWindow();
   if (process.env.NODE_ENV === 'production') {
-    setInterval(() => {
       autoUpdater.checkForUpdates();
-    }, 60000);
   }  
 });
 
