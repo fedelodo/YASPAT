@@ -51,12 +51,13 @@
       <p>
         YASPAT - Yet Another Simple Production Analysis Tool 
       </p>
-      <p  style="color: #fbceb1">Apricot Astatine</p>
+      <p  style="color: #1261A0">Blue Berylium</p>
       </vs-row>
       <vs-divider/>
       <div> 
         Author: Federico Lodovici
       </div>
+
     </vs-popup>
     </vs-sidebar>
   </div>
