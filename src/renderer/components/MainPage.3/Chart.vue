@@ -13,6 +13,7 @@
 <script>
   import axios from 'axios';
   import 'v-charts/lib/style.css';
+  import moment from 'moment';
   import _ from 'lodash'; 
   import Dropdownmenu from './Dropdownmenu';
      
@@ -72,7 +73,7 @@
           this.chartData = DATA_FROM_BACKEND;
           this.dataEmpty = !this.chartData.rows.length;
           this.loading = false;
-        }, 500);
+        }, 5000);
       console.log(this.chartData);
     },
   },

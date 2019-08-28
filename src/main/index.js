@@ -1,4 +1,4 @@
-import { app, BrowserWindow,  dialog } from 'electron';
+import { app, BrowserWindow, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 const log = require('electron-log');
 

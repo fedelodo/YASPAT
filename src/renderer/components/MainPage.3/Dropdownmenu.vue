@@ -114,7 +114,9 @@
           },
           methods: {
             loadItems() {                  
-              axios.get(`http://${localStorage.ip}:${localStorage.port}/api/Produzione1m`).then((response) => {
+              axios.get(`http://${localStorage.ip}:${localStorage.port}/api/Produzione1m`, {
+                      params: { __limit: 20 }, // eslint-disable-line object-shorthand
+                      }).then((response) => {
                       this.options1 = [{ text: '', value: '' }];
                       this.options2 = [{ text: '', value: '' }];
                       this.options3 = [{ text: '', value: '' }];
