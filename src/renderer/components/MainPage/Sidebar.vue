@@ -51,7 +51,7 @@
       <p>
         YASPAT - Yet Another Simple Production Analysis Tool 
       </p>
-      <p  style="color: #1261A0">Blue Berylium</p>
+      <p  style="color: #ff0000">Blue Berylium</p>
       </vs-row>
       <vs-divider/>
       <div> 
