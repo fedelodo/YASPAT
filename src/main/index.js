@@ -1,7 +1,5 @@
-import { app, BrowserWindow } from 'electron' // eslint-disable-line
+import { app, BrowserWindow, autoUpdater } from 'electron' // eslint-disable-line
 const log = require('electron-log');
-const { autoUpdater } = require('electron-updater');
-
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
