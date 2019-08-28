@@ -1,4 +1,4 @@
-import { app, BrowserWindow, autoUpdater } from 'electron' // eslint-disable-line
+import { app, BrowserWindow, autoUpdater, dialog } from 'electron' // eslint-disable-line
 const log = require('electron-log');
 
 autoUpdater.logger = log;
@@ -43,7 +43,11 @@ function createWindow() {
 
 app.on('ready', () => {
   createWindow();
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdatesAndNotify();
+  if (process.env.NODE_ENV === 'production') {
+    setInterval(() => {
+      autoUpdater.checkForUpdates();
+    }, 600000);
+  }  
 });
 
 app.on('window-all-closed', () => {
@@ -66,6 +70,20 @@ app.on('activate', () => {
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
  */
 
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.quitAndInstall();
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail: 'A new version has been downloaded. Restart the application to apply the updates.',
+  };
+  dialog.showMessageBox(dialogOpts, (response) => {
+    if (response === 0) autoUpdater.quitAndInstall();
+  });
+});
+
+autoUpdater.on('error', message => {
+  console.error('There was a problem updating the application');
+  console.error(message);
 });
