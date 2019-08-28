@@ -51,7 +51,6 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "publisherName": "RCM Rossignoli srl",
       "publish": [
         "github"
       ],
