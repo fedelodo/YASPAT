@@ -46,7 +46,7 @@ app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') {
     setInterval(() => {
       autoUpdater.checkForUpdates();
-    }, 600000);
+    }, 60000);
   }  
 });
 
