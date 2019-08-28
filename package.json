@@ -4,6 +4,7 @@
   "author": "Federico Lodovici",
   "description": "Yet Another Simple Production Analysis Tool",
   "license": "BSD-3-Clause",
+  "repository": "https://github.com/fedelodo/YASPAT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
