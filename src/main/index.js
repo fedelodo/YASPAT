@@ -19,11 +19,6 @@ const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`;
 
-const server = 'https://hazel.fedelodo.now.sh';
-const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
-  
-autoUpdater.setFeedURL(feed);
-
 function createWindow() {
   /**
    * Initial window options
@@ -43,6 +38,7 @@ function createWindow() {
 }
 
 app.on('ready', () => {
+  autoUpdater.logger = log;
   createWindow();
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates();
 });
@@ -68,6 +64,7 @@ app.on('activate', () => {
  */
 
 autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  autoUpdater.logger = log;
   const dialogOpts = {
     type: 'info',
     buttons: ['Restart', 'Later'],
