@@ -1,5 +1,12 @@
 import { app, BrowserWindow } from 'electron' // eslint-disable-line
-import { autoUpdater } from 'electron-updater';
+const log = require('electron-log');
+const { autoUpdater } = require('electron-updater');
+
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -13,6 +20,10 @@ const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`;
 
+const server = 'https://hazel.fedelodo.now.sh';
+const feed = `${server}/update/${process.platform}/${app.getVersion()}`;
+  
+autoUpdater.setFeedURL(feed);
 
 function createWindow() {
   /**
@@ -30,12 +41,11 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
-
 }
 
 app.on('ready', () => {
   createWindow();
-  autoUpdater.checkForUpdates();
+  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('window-all-closed', () => {
@@ -61,4 +71,3 @@ app.on('activate', () => {
 autoUpdater.on('update-downloaded', () => {
   autoUpdater.quitAndInstall();
 });
-
