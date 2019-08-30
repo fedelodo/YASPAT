@@ -7,7 +7,7 @@
        </div>
         <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
           <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
-                   <date-picker label="Date"
+            <date-picker label="Date"
               v-on:clear="clear"
               v-on:change="changed" 
               v-model="time1" 

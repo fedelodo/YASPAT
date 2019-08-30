@@ -2,12 +2,15 @@
   <div>
      <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
           <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
-            <date-picker label="Date" 
-             v-on:change="changed" 
-             v-model="time1" 
-             append-to-body range lang="it" 
-             format="YYYY-MM-DDTHH:mm:ss"
-             type="datetime"></date-picker>
+            <date-picker label="Date"
+              v-on:clear="clear"
+              v-on:change="changed" 
+              v-model="time1" 
+              append-to-body
+              range :shortcuts="shortcuts" lang="it"
+              format="YYYY-MM-DD HH:mm" 
+              type="datetime">
+            </date-picker>
           </vs-col>
       </vs-row>
       <vs-divider/>
@@ -65,6 +68,7 @@
 
   import axios from 'axios';
   import _ from 'lodash'; 
+  import moment from 'moment';
   import DatePicker from 'vue2-datepicker';
 
   export default {
@@ -94,20 +98,80 @@
           columns: [],
           rows: [],
         },
+        shortcuts: [
+                {
+                  text: 'Oggi',
+                  onClick: (self) => {
+                    const d = new Date();
+                    const d1 = new Date();
+                    d.setHours(0, 0, 0);
+                    d1.setHours(23, 59, 0);
+                    self.currentValue = [d, d1];
+                    self.updateDate(true);
+                  },
+                },
+                {
+                  text: 'Ieri',
+                  onClick: (self) => {
+                    const d = new Date();
+                    const d1 = new Date();
+                    d.setDate(d.getDate() - 1);
+                    d1.setDate(d1.getDate() - 1);
+                    d.setHours(0, 0, 0);
+                    d1.setHours(23, 59, 0);
+                    self.currentValue = [d, d1];
+                    self.updateDate(true);
+                  },
+                },
+                {
+                  text: 'Ultima Settimana',
+                  onClick: (self) => {
+                    const d = new Date();
+                    const d1 = new Date();
+                    d.setDate(d1.getDate() - 7);
+                    d.setHours(0, 0, 0);
+                    d1.setHours(23, 59, 0);
+                    self.currentValue = [d, d1];
+                    self.updateDate(true);
+                  },
+                },
+                {
+                  text: 'Ultimo Mese',
+                  onClick: (self) => {
+                    const d = new Date();
+                    const d1 = new Date();
+                    d.setDate(d1.getDate() - 30);
+                    d.setHours(0, 0, 0);
+                    d1.setHours(23, 59, 0);
+                    self.currentValue = [d, d1];
+                    self.updateDate(true);
+                  },
+                },
+              ],
       };
     },
     name: 'main-page',
     methods: {
+      dateFromOADate(oaDate) {
+        // Treat integer part is whole days
+        const days = parseInt(oaDate, 10);
+        // Treat decimal part as part of 24hr day, always +ve
+        const ms = Math.abs((oaDate - days) * 8.64e7);
+        const date = new Date(1899, 11, (30 + days), 0, 0, 0, ms);
+        // Add days and add ms
+        return date;
+      },
+
       open(link) {
         this.$electron.shell.openExternal(link);
       },   
      changed() {
        const value = this.time1;
-        console.log(value);
-        //  const starttim = value[0][0].toISOstring();
+        const startdate = moment(value[0]).format('YYYY-MM-DD HH:MM:SS');
+        const enddate = moment(value[1]).format('YYYY-MM-DD HH:MM:SS');
         this.getData({
-            TimeString__gte: value[0],
-            TimeString__lte: value[1],
+            TimeString__gte: startdate,
+            TimeString__lte: enddate,
           });
       },
       getData(params) {
@@ -124,9 +188,11 @@
                 if (timestop[j].lenght) {
                   j += 1;
                 }
-                timework[j].push(response.data.data[i].Time_ms);
+                timework[j].push(this.dateFromOADate(response.data.data[i].Time_ms
+                 / 1000000).getTime() / 1000);
               } else {
-                timestop[j].push(response.data.data[i].Time_ms);
+                timework[j].push(this.dateFromOADate(response.data.data[i].Time_ms 
+                / 1000000).getTime() / 1000);
               }
             }
             let temptim = 0;

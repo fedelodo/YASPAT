@@ -7,8 +7,13 @@
     :loading="loading"
     :data-empty="dataEmpty">
     </ve-histogram>
-    <!-- <span> Il tempo totale di fermo nel periodo selezionato e' {{ TempoTotale }} secondi ovvero 
-      circa {{ minuti }} minuti.</span> -->
+    <div  vs-type="flex"> 
+      Tempo totale di fermo nel periodo selezionato:  
+      <div vs-type="flex" vs-justify="flex-end" class="box"> {{ore}} ore,  {{ minuti }} minuti,  {{ TempoTotale }} secondi </div>
+      <br>
+      Numero totale di occorrenze degli allarmi:
+      <div vs-type="flex" vs-justify="flex-end" class="box"> {{occurrencies}} </div>
+    </div>
     <vs-divider/>
     <vue-good-table
     :rows="rows"
@@ -54,6 +59,11 @@
           field: 'text',              
         },
         {
+          label: 'Tempo di occorrenza (s)',
+          field: 'tim',
+          type: 'number',
+        },
+        {
           label: 'Percentuale incidenza',
           field: 'perc',
           type: 'percentage',
@@ -72,10 +82,22 @@
       loading: false,
       dataEmpty: false,
       TempoTotale: 0,
+      occurrencies: 0,
       minuti: 0,
+      ore: 0,
     };
   },
   methods: {
+    dateFromOADate(oaDate) {
+        // Treat integer part is whole days
+        const days = parseInt(oaDate, 10);
+        // Treat decimal part as part of 24hr day, always +ve
+        const ms = Math.abs((oaDate - days) * 8.64e7);
+        const date = new Date(1899, 11, (30 + days), 0, 0, 0, ms);
+        // Add days and add ms
+        return date;
+      },
+
       onChildClick(value) {
         let startdate;
         let enddate;
@@ -86,7 +108,7 @@
         } 
         //  const starttim = value[0][0].toISOstring();
         this.getData({
-          __sort: '-TimeString',
+          __sort: 'Time_ms',
           TimeString__gte: startdate,
           TimeString__lte: enddate, 
           MsgNumber: value[1], 
@@ -103,20 +125,24 @@
           const temp = {};
           const arrval = [];
           let totaltim = 0;
+          let occurrencies = 0;
           const arr = response.data.data;
           const val = arr.reduce((result, item) => {
+            console.log(item);
             const num = item.MsgNumber;
-            const time = item.Time_ms;
+            const time = (this.dateFromOADate(item.Time_ms / 1000000).getTime() / 1000);
+            console.log(time);
             const state = item.StateAfter;
             result[num] = (result[num]) ? result[num] : {};
+            console.log(`${num} = ${time} and ${state}`);
             if (state === '1' || state === 1) { 
                 (temp[num] = time); 
               } else {
+                result[num].occ = (result[num].occ || 0) + 1;
                 result[num].tim = (num in temp)
                   ? (result[num].tim || 0) + Math.abs(time - temp[num])
                   : null; 
             } 
-            result[num].occ = (result[num].occ || 0) + 1;
             result[num].num = num;    
             result[num].text = (item.MsgText) ? item.MsgText : 'default';
             return result;   
@@ -126,14 +152,20 @@
          arrval.push(val[element]);
         });
 
-        const perc = arrval.reduce((result, item) => {
+        let perc = arrval.reduce((result, item) => {
           totaltim += (item.tim || 0); 
-          return totaltim; 
+          return totaltim;
+         }, []);
+
+         const occurs = arrval.reduce((result, item) => {
+          occurrencies += (item.occ || 0); 
+          return occurrencies;
          }, []);
 
        arrval.forEach((element) => { 
-         element.perc = (element.tim / perc);
-         element.occ /= 2;
+        console.log(`${element.tim} of ${perc}`);
+        element.perc = (element.tim / perc);
+        element.tim = Math.round(element.tim);
          });
 
         DATA_FROM_BACKEND.columns = [
@@ -142,9 +174,11 @@
         DATA_FROM_BACKEND.rows = arrval;
         this.rows = arrval;
         console.log(perc);
-        this.TempoTotale = Math.round(perc / 1000);
-        this.minuti = Math.round(this.TempoTotale / 60);
-        console.log(DATA_FROM_BACKEND);
+        this.ore = Math.floor(perc / 3600);
+        perc %= 3600;
+        this.minuti = Math.floor(perc / 60);
+        this.TempoTotale = Math.round(perc % 60);
+        this.occurrencies = occurs;
       });
       setTimeout(() => { 
         this.chartData = DATA_FROM_BACKEND;
@@ -156,7 +190,8 @@
   },
   created() {
     this.getData({
-      __sort: '-TimeString',
+      __sort: 'Time_ms',
+      TimeString__gte: moment().format('YYYY-MM-DD'),
       __limit: 100,
     });
   },
@@ -167,6 +202,12 @@
 };
 </script>
 <style>
+.box {
+  width: auto;
+  padding: 10px;
+  border: 2px solid gray;
+  margin: 0; 
+}
 
 </style>
 
