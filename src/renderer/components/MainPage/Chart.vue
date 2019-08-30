@@ -77,16 +77,20 @@
   },
   methods: {
       onChildClick(value) {
+        let startdate;
+        let enddate;
         console.log(value);
+        if (value[0] !== '') {
+          startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
+          enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
+        } 
         //  const starttim = value[0][0].toISOstring();
-        const startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
-        const enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
         this.getData({
           __sort: '-TimeString',
           TimeString__gte: startdate,
           TimeString__lte: enddate, 
-          VarValue: value[1], 
-          VarName: value[2],
+          MsgNumber: value[1], 
+          MsgText__contains: value[2],
           });
       },
     getData(params) {

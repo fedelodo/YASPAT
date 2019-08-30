@@ -49,6 +49,10 @@
                   label: 'Testo Allarme',
                   field: 'MsgText',              
                 },
+                {
+                  label: 'Stato',
+                  field: 'StateAfter',              
+                },
               /*  {
                   label: 'Percent',
                   field: 'score',
@@ -65,25 +69,22 @@
             }; 
           },
           methods: {
-             onChildClick(value) {
-               console.log(value);
+          onChildClick(value) {
+                let startdate;
+                let enddate;
+                console.log(value);
+                if (value[0] !== '') {
+                  startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
+                  enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
+                } 
                 //  const starttim = value[0][0].toISOstring();
-                if (value.length > 2) {
-                  const startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
-                  const enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
-                  this.updateParams({
-                   TimeString__gte: startdate,
-                   TimeString__lte: enddate, 
-                    VarValue: value[1], 
-                    VarName: value[2], 
-                    MsgText: value[2],
+                this.updateParams({
+                  __sort: '-TimeString',
+                  TimeString__gte: startdate,
+                  TimeString__lte: enddate, 
+                  MsgNumber: value[1], 
+                  MsgText__contains: value[2],
                   });
-                } else {
-                    this.updateParams({
-                      MsgNumber: value[0], 
-                      MsgText: value[1],
-                  });
-                }
                 console.log(this);
                 this.loadItems();
               },

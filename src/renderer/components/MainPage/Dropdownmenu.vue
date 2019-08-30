@@ -30,7 +30,7 @@
           </vs-col>
           <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="3">
             <vs-select
-              placeholder="Testo Allarme"
+              placeholder="Numero Stazione"
               class="selectExample"
               v-model="select3"
                v-on:change="changed" name="msgtext"
@@ -133,7 +133,8 @@ import DatePicker from 'vue2-datepicker';
                         const text = value;
                         this.options2.push({ text, value });
                       });
-                      const values3 = [...new Set(response.data.data.map(x => x.MsgText))];
+                      const values3 = [...new Set(response.data.data.map(x => 
+                                        x.MsgText.slice(0, x.MsgText.search(/[-_]/g))))];
                       values3.forEach((value) => {
                         const text = value;
                         this.options3.push({ text, value });
