@@ -14,10 +14,10 @@
           </vs-col>
       </vs-row>
       <vs-divider/>
-    <div>
+    <div style="font-size:120%;">
       <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
         <vs-col  vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
-          <p> Vita Macchina </p> 
+          <p > Vita Macchina </p> 
         </vs-col>
         <vs-col  vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
           <span> {{ VitaMacchina }} </span> 
@@ -49,18 +49,10 @@
       </vs-row>    
     </div>
     <vs-divider/>
-    
     <ve-gauge
           :data="chartData" 
           :settings="chartSettings">
-        </ve-gauge>
-    <vs-row vs-w="12" vs-align="center" vs-type="flex" vs-justify="center" >
-      <vs-col vs-w="6" vs-type="flex" vs-justify="center" vs-align="center"> 
-          <vs-input-number label="Resa Teorica" v-model="number1"/>
-     </vs-col>
-    </vs-row>  
-   
-    
+    </ve-gauge>
   </div>
 </template>
 
@@ -82,6 +74,11 @@
          rate: {
             min: 0,
             max: 1,
+            axisLine: {
+              lineStyle: {
+                color: [[0.2, '#FF0000'], [0.8, '#FFFF00'], [1, '#ADFF2F']],
+              },
+            },
           },
         },
       };
@@ -161,7 +158,15 @@
         // Add days and add ms
         return date;
       },
-
+      persist() {
+        localStorage.resa = this.number1;
+        this.chartData = {
+              columns: ['type', 'value'],
+              rows: [
+                { type: 'rate', value: (this.Resa / this.number1) },
+              ],
+            };
+      },
       open(link) {
         this.$electron.shell.openExternal(link);
       },   
@@ -175,7 +180,7 @@
           });
       },
       getData(params) {
-        this.loading = true;
+        this.$vs.loading();
         axios.get(`http://${localStorage.ip}:${localStorage.port}/api/StatoImpianto`, {
             params: params, // eslint-disable-line object-shorthand
           })
@@ -246,18 +251,24 @@
                 { type: 'rate', value: (this.Resa / this.number1) },
               ],
             };
+            setTimeout(() => {
+              this.$vs.loading.close();
+            }, 2000);
         });
     },
   },
   mounted() {
-    const date = new Date();
-    const now = date.toISOString();
-    const monthago = (date.setDate(date.getDate() - 30)).toISOString();
-    console.log(now);
-    console.log(monthago);
+    if (localStorage.resa) {
+      this.number1 = localStorage.resa;
+    }
+    const d = new Date();
+    const d1 = new Date();
+    d.setDate(d1.getDate() - 30);
+    d.setHours(0, 0, 0);
+    d1.setHours(23, 59, 0);
     this.getData({
-      TimeString__lte: now,
-      TimeString__gte: monthago,
+      TimeString__lte: d1,
+      TimeString__gte: d,
     });
     },
   };

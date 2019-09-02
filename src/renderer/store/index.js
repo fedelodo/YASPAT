@@ -21,6 +21,7 @@ export default new Vuex.Store({
     msgtext: '',
     ip: '0.0.0.0',
     port: 5000,
+    resa: 1,
   },
   actions: {
     updateip(context, payload) {
@@ -50,6 +51,9 @@ export default new Vuex.Store({
     changemsgtext(state, msgtext) {
       state.msgtext = msgtext;
     },
+    changeresa(state, resa) {
+      state.resa = resa;
+    },
   },
   getters: {
     ip: state => state.ip,
@@ -57,5 +61,6 @@ export default new Vuex.Store({
     date: state => state.date,
     msgnum: state => state.msgnum,
     msgtext: state => state.msgtext,
+    resa: state => state.resa,
   },
 });

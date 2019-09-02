@@ -32,10 +32,10 @@
         <vs-sidebar-item v-show="StatoImpianto" index="6" icon="device_hub">
           Stato Impianto
         </vs-sidebar-item>
-        <vs-sidebar-item v-show="DatiAnalogici" index="7" icon="build">
+        <vs-sidebar-item v-show="DatiAnalogici" index="7"  :to="{ name: 'DatiAnalogici'}" icon="build">
           DatiAnalogici
         </vs-sidebar-item>
-        <vs-sidebar-item  v-show="IPP" index="8" icon="help">
+        <vs-sidebar-item  v-show="IPP" index="8"  :to="{ name: 'IPP'}" icon="help">
           Informazioni Pezzi Prodotti
         </vs-sidebar-item>
 

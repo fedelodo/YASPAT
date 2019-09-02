@@ -8,22 +8,32 @@ export default new Router({
     {
       path: '/Segnalazioni',
       name: 'Segnalazioni',
-      component: require('@/components/MainPage').default,
+      component: require('@/components/Segnalazioni').default,
     },
     {
       path: '/Produzione1H',
       name: 'Produzione1H',
-      component: require('@/components/MainPage.1').default,
+      component: require('@/components/Produzione1H').default,
     },
     {
       path: '/Scarti',
       name: 'Scarti',
-      component: require('@/components/MainPage.2').default,
+      component: require('@/components/Scarti').default,
     },
     {
       path: '/Produzione1m',
       name: 'Produzione1m',
-      component: require('@/components/MainPage.3').default,
+      component: require('@/components/Produzione1m').default,
+    },  
+    {
+      path: '/DatiAnalogici',
+      name: 'DatiAnalogici',
+      component: require('@/components/DatiAnalogici').default,
+    },
+    {
+      path: '/InformazioniPezziProdotti',
+      name: 'IPP',
+      component: require('@/components/InformazioniPezziProdotti').default,
     },
     {
       path: '/Settings',
