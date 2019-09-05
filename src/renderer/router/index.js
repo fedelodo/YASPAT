@@ -46,6 +46,11 @@ export default new Router({
       component: require('@/components/StatisticheProduzione').default,
     },
     {
+      path: '/StatoImpianto',
+      name: 'StatoImpianto',
+      component: require('@/components/StatoImpianto').default,
+    },
+    {
       path: '/',
       redirect: '/Segnalazioni',
     },

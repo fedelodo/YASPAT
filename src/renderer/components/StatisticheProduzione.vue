@@ -46,13 +46,61 @@
         <vs-col vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
           <span> {{ Resa }} </span>   
         </vs-col>
+      </vs-row>  
+       <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
+        <vs-col vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <p> Resa Netta </p> 
+        </vs-col>
+        <vs-col vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <span> {{ ResaNetta }} </span>   
+        </vs-col>
       </vs-row>    
     </div>
     <vs-divider/>
-    <ve-gauge
-          :data="chartData" 
-          :settings="chartSettings">
-    </ve-gauge>
+          <ve-gauge
+            :data="chartData" 
+            :settings="chartSettings">
+          </ve-gauge>
+          <ve-gauge
+          :data="chartData1" 
+          :settings="chartSettings1">
+        </ve-gauge>   
+    
+    <vs-divider/>
+    <div style="font-size:120%;">
+      <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
+        <vs-col  vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <p > Numero di Ore. </p> 
+        </vs-col>
+        <vs-col  vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <span> {{ temposolare }} </span> 
+        </vs-col>
+      </vs-row>
+      <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
+        <vs-col vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <p> Tempo di carico (Disponibilità tecnica) </p> 
+        </vs-col>
+        <vs-col vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <span> {{ tempodisponibilita }} </span> 
+        </vs-col>
+      </vs-row>
+      <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
+        <vs-col vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <p> Tempo di lavoro </p> 
+        </vs-col>
+        <vs-col vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <span> {{ tempolavoro }} </span>   
+        </vs-col>
+      </vs-row>
+       <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
+        <vs-col vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <p> Tempo di lavoro netto </p> 
+        </vs-col>
+        <vs-col vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <span> {{ tempolavoronetto }} </span>   
+        </vs-col>
+      </vs-row>    
+    </div>
   </div>
 </template>
 
@@ -67,6 +115,9 @@
     components: { DatePicker },
     data() {
       this.chartSettings = {
+        dataName: {
+          rate: 'Resa',
+        },
         dataType: {
           rate: 'percent',
         },
@@ -76,7 +127,26 @@
             max: 1,
             axisLine: {
               lineStyle: {
-                color: [[0.2, '#FF0000'], [0.8, '#FFFF00'], [1, '#ADFF2F']],
+                color: [[0.2, '#FF0000'], [0.8, '#FF8C00'], [1, '#ADFF2F']],
+              },
+            },
+          },
+        },
+      };
+      this.chartSettings1 = {
+        dataName: {
+          rate: 'Resa Netta',
+        },
+        dataType: {
+          rate: 'percent',
+        },
+        seriesMap: {
+         rate: {
+            min: 0,
+            max: 1,
+            axisLine: {
+              lineStyle: {
+                color: [[0.2, '#FF0000'], [0.8, '#FF8C00'], [1, '#ADFF2F']],
               },
             },
           },
@@ -89,9 +159,23 @@
         PezziScarti: 0,
         time1: '',
         Resa: 0,
+        ResaNetta: 0,
         totaltim: 0,
+        totaltimnetto: 0,
         number1: 1,
+        one: 0,
+        zero: 0,
+        two: 0,
+        three: 0,
+        temposolare: 0,
+        tempodisponibilita: 0,
+        tempolavoro: 0,
+        tempolavoronetto: 0,
         chartData: {
+          columns: [],
+          rows: [],
+        },
+        chartData1: {
           columns: [],
           rows: [],
         },
@@ -149,6 +233,24 @@
     },
     name: 'main-page',
     methods: {
+      calcb(arr) {
+        let maxb = arr[0].OPCUA_Produzione_BUONI;
+        let minb = arr[0].OPCUA_Produzione_BUONI;
+        let totb = 0;
+        for (let i = 1, len = arr.length; i < len; i += 1) {
+          const b = arr[i].OPCUA_Produzione_BUONI;
+          if (b === 0 || b === '0') {
+            len = i;
+            totb += this.calcb(arr.slice(i));
+          } else {
+            minb = (b < minb) ? b : minb;
+            maxb = (b > maxb) ? b : maxb;
+          }
+        }
+        totb += (maxb - minb >= 0) ? maxb - minb : 0;
+        return totb;
+      },
+
       dateFromOADate(oaDate) {
         // Treat integer part is whole days
         const days = parseInt(oaDate, 10);
@@ -184,29 +286,60 @@
         axios.get(`http://${localStorage.ip}:${localStorage.port}/api/StatoImpianto`, {
             params: params, // eslint-disable-line object-shorthand
           })
+          // (Math.round(this.dateFromOADate(response.data.data[i].Time_ms
+          //      / 1000000).getTime() / 1000))
           .then((response) => {
-            const timework = [[]];
-            const timestop = [[]];
-            let j = 0;
-            for (let i = 0, len = response.data.data.length; i < len; i += 1) {
-              if (response.data.data[i].VarValue === 1) {
-                if (timestop[j].lenght) {
-                  j += 1;
-                }
-                timework[j].push(this.dateFromOADate(response.data.data[i].Time_ms
-                 / 1000000).getTime() / 1000);
-              } else {
-                timework[j].push(this.dateFromOADate(response.data.data[i].Time_ms 
-                / 1000000).getTime() / 1000);
-              }
+          const zero = [];
+          const one = [];
+          const two = [];
+          const three = [];
+           const arr = response.data.data;
+           arr.forEach((element, index) => {
+            if (index > 0) { 
+               const prev = arr[index - 1]; 
+              if (element.VarValue === 1 || element.VarValue === '1') {
+                const prevtim = (Math.round(this.dateFromOADate(prev.Time_ms
+                  / 1000000).getTime() / 1000));
+                const curtim = (Math.round(this.dateFromOADate(element.Time_ms
+                  / 1000000).getTime() / 1000));
+                one.push(curtim - prevtim);
+               }
+              if (element.VarValue === 2 || element.VarValue === '2') {
+                const prevtim = (Math.round(this.dateFromOADate(prev.Time_ms
+                  / 1000000).getTime() / 1000));
+                const curtim = (Math.round(this.dateFromOADate(element.Time_ms
+                  / 1000000).getTime() / 1000));
+                two.push(curtim - prevtim);
+               }
+              if (element.VarValue === 3 || element.VarValue === '3') {
+                const prevtim = (Math.round(this.dateFromOADate(prev.Time_ms
+                  / 1000000).getTime() / 1000));
+                const curtim = (Math.round(this.dateFromOADate(element.Time_ms
+                  / 1000000).getTime() / 1000));
+                three.push(curtim - prevtim);
+               }
+              if (element.VarValue === 0 || element.VarValue === '0') {
+                const prevtim = (Math.round(this.dateFromOADate(prev.Time_ms
+                  / 1000000).getTime() / 1000));
+                const curtim = (Math.round(this.dateFromOADate(element.Time_ms
+                  / 1000000).getTime() / 1000));
+                zero.push(curtim - prevtim);
+               }              
             }
-            let temptim = 0;
-            for (let k = 0; k <= j; k += 1) {
-              const maxtimw = Math.max(...timework[k]);
-              const mintimw = Math.min(...timework[k]);
-              temptim += (maxtimw - mintimw);
-            }
-          this.totaltim = temptim / (1000);
+           });
+            this.zero = zero.reduce((a, b) => a + b, 0);
+            this.one = one.reduce((a, b) => a + b, 0);
+            this.two = two.reduce((a, b) => a + b, 0);
+            this.three = three.reduce((a, b) => a + b, 0);
+            this.temposolare = (this.one + this.two + this.three + this.zero);
+            this.tempodisponibilita = this.one + this.two + this.three;
+            this.tempolavoro = this.two + this.three;
+            this.tempolavoronetto = this.three;
+            this.totaltim = (this.three + this.two) / 60;
+            this.totaltimnetto = (this.three) / 60;
+            setTimeout(() => {
+              this.$vs.loading.close();
+            }, 2000);
           });
         axios.get(`http://${localStorage.ip}:${localStorage.port}/api/Produzione1m`, {
             params: params, // eslint-disable-line object-shorthand
@@ -225,30 +358,31 @@
               .value();
             let minvm = arr[0].OPCUA_Produzione_VITA_MACCHINA;
             let maxvm = arr[0].OPCUA_Produzione_VITA_MACCHINA;
-            let maxb = arr[0].OPCUA_Produzione_BUONI;
-            let minb = arr[0].OPCUA_Produzione_BUONI;
             let maxs = arr[0].OPCUA_Produzione_SCARTI;
             let mins = arr[0].OPCUA_Produzione_SCARTI;
             for (let i = 1, len = arr.length; i < len; i += 1) {
               const vm = arr[i].OPCUA_Produzione_VITA_MACCHINA;
-              const b = arr[i].OPCUA_Produzione_BUONI;
               const s = arr[i].OPCUA_Produzione_SCARTI;
               minvm = (vm < minvm) ? vm : minvm;
               maxvm = (vm > maxvm) ? vm : maxvm;
-              minb = (b < minb) ? b : minb;
-              maxb = (b > maxb) ? b : maxb;
               mins = (s < mins) ? s : mins;
               maxs = (s > maxs) ? s : maxs;
             }
-
+            this.PezziBuoni = this.calcb(arr);
             this.VitaMacchina = (maxvm - minvm >= 0) ? maxvm - minvm : 0;
-            this.PezziBuoni = (maxb - minb >= 0) ? maxb - minb : 0;
             this.PezziScarti = (maxs - mins >= 0) ? maxs - mins : 0;
             this.Resa = Math.round(this.PezziBuoni / (this.totaltim / 60));
+            this.ResaNetta = Math.round(this.PezziBuoni / (this.totaltimnetto / 60));
             this.chartData = {
               columns: ['type', 'value'],
               rows: [
                 { type: 'rate', value: (this.Resa / this.number1) },
+              ],
+            };
+            this.chartData1 = {
+              columns: ['type', 'value'],
+              rows: [
+                { type: 'rate', value: (this.ResaNetta / this.number1) },
               ],
             };
             setTimeout(() => {
@@ -263,7 +397,7 @@
     }
     const d = new Date();
     const d1 = new Date();
-    d.setDate(d1.getDate() - 30);
+    d.setDate(d1.getDate());
     d.setHours(0, 0, 0);
     d1.setHours(23, 59, 0);
     this.getData({

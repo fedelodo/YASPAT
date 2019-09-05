@@ -29,7 +29,7 @@
         <vs-sidebar-item v-show="Scarti" index="5" :to="{ name: 'Scarti'}" icon="delete">
           Scarti
         </vs-sidebar-item>
-        <vs-sidebar-item v-show="StatoImpianto" index="6" icon="device_hub">
+        <vs-sidebar-item v-show="StatoImpianto" index="6" :to="{ name: 'StatoImpianto'}" icon="device_hub">
           Stato Impianto
         </vs-sidebar-item>
         <vs-sidebar-item v-show="DatiAnalogici" index="7"  :to="{ name: 'DatiAnalogici'}" icon="build">
