@@ -8,6 +8,7 @@ import 'material-icons/iconfont/material-icons.css';
 import 'typeface-roboto/index.css';
 
 import VCharts from 'v-charts';
+import ECharts from 'vue-echarts';
 
 import App from './App';
 import router from './router';
@@ -17,6 +18,7 @@ Vue.use(require('vue-moment'));
 Vue.use(Vuesax);
 Vue.use(VCharts);
 Vue.use(Vuex);
+Vue.component('v-chart', ECharts);
 
 if (!process.env.IS_WEB) {
   Vue.use(require('vue-electron'));
