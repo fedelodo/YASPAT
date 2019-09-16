@@ -69,19 +69,17 @@
              onChildClick(value) {
                console.log(value);
                 //  const starttim = value[0][0].toISOstring();
-                if (value.length > 2) {
+                if (value.length > 1) {
                   const startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
                   const enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
                   this.updateParams({
                    TimeString__gte: startdate,
                    TimeString__lte: enddate, 
-                    VarValue: value[1], 
                     VarName: value[2],
                   });
                 } else {
-                    this.updateParams({
-                      MsgNumber: value[0], 
-                      MsgText: value[1],
+                    this.updateParams({ 
+                      VarName: value[2],
                   });
                 }
                 console.log(this);

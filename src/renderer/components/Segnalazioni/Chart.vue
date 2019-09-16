@@ -123,26 +123,39 @@
         })
         .then((response) => {
           const temp = {};
+          const tempn = {};
           const arrval = [];
           let totaltim = 0;
           let occurrencies = 0;
           const arr = response.data.data;
           const val = arr.reduce((result, item) => {
-            console.log(item);
             const num = item.MsgNumber;
             const time = (this.dateFromOADate(item.Time_ms / 1000000).getTime() / 1000);
-            console.log(time);
             const state = item.StateAfter;
             result[num] = (result[num]) ? result[num] : {};
-            console.log(`${num} = ${time} and ${state}`);
             if (state === '1' || state === 1) { 
-                (temp[num] = time); 
+                (temp[num] = time);
+                (tempn[num] = time); 
               } else {
                 result[num].occ = (result[num].occ || 0) + 1;
                 result[num].tim = (num in temp)
                   ? (result[num].tim || 0) + Math.abs(time - temp[num])
                   : null; 
-            } 
+                result[num].timn = (num in tempn)
+                  ? (result[num].timn || 0) + Math.abs(time - tempn[num])
+                  : null;                   
+                delete temp[num];
+                delete tempn[num];
+                if (!(Object.keys(tempn).length === 0 && tempn.constructor === Object)) {
+                  console.log('non vuoto');
+                  Object.keys(tempn).forEach((v) => { tempn[v] = time; });
+                }
+                console.log('tempn:');
+                console.log(tempn);
+                console.log('temp:');
+                console.log(temp);
+                console.log(`res ${num}: ${result[num].tim}, ${time}`);
+            }
             result[num].num = num;    
             result[num].text = (item.MsgText) ? item.MsgText : 'default';
             return result;   
@@ -153,7 +166,7 @@
         });
 
         let perc = arrval.reduce((result, item) => {
-          totaltim += (item.tim || 0); 
+          totaltim += (item.timn || 0); 
           return totaltim;
          }, []);
 
@@ -163,7 +176,6 @@
          }, []);
 
        arrval.forEach((element) => { 
-        console.log(`${element.tim} of ${perc}`);
         element.perc = (element.tim / perc);
         element.tim = Math.round(element.tim);
          });
@@ -173,7 +185,6 @@
         ];
         DATA_FROM_BACKEND.rows = arrval;
         this.rows = arrval;
-        console.log(perc);
         this.ore = Math.floor(perc / 3600);
         perc %= 3600;
         this.minuti = Math.floor(perc / 60);
@@ -183,7 +194,6 @@
       setTimeout(() => { 
         this.chartData = DATA_FROM_BACKEND;
         // this.dataEmpty = !this.chartData.data.length;
-        console.log(this.chartData);
         this.loading = false;
       }, 1000);
     },

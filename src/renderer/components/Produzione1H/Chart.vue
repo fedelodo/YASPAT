@@ -56,22 +56,8 @@
             end: 100,
         },
         {
-            type: 'slider',
-            show: true,
-            yAxisIndex: [0],
-            left: '93%',
-            start: 0,
-            end: 100,
-        },
-        {
             type: 'inside',
             xAxisIndex: [0, 1, 2],
-            start: 0,
-            end: 100,
-        },
-        {
-            type: 'inside',
-            yAxisIndex: [0],
             start: 0,
             end: 100,
         },
@@ -139,7 +125,7 @@
               name: cols,
               type: 'line',
               xAxisIndex: index,
-              smooth: true,
+              smooth: false,
               data: [],
             });
             legend.push(cols);
