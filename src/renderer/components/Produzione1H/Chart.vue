@@ -52,14 +52,16 @@
             type: 'slider',
             show: true,
             xAxisIndex: [0, 1, 2],
-            start: 1,
+            start: 0,
             end: 100,
+            filterMode: 'empty',
         },
         {
             type: 'inside',
             xAxisIndex: [0, 1, 2],
             start: 0,
             end: 100,
+            filterMode: 'empty',
         },
         ],
       },
@@ -106,8 +108,10 @@
             DATA_FROM_BACKEND.columns = [...col];
                       DATA_FROM_BACKEND.columns = DATA_FROM_BACKEND.columns.filter(item => item !== 'TimeString');
            DATA_FROM_BACKEND.columns.forEach((cols, index) => {
-            xaxis.push({
-              type: 'category',
+             console.log(cols);
+            if (cols === 'OPCUA_Produzione_MediaProduzione_Resa1H') {
+              xaxis.push({
+                 type: 'category',
                offset: index * 10,
               axisTick: {
                 alignWithLabel: true,
@@ -120,7 +124,25 @@
                 },
               },
               data: [],
+              min: 1,
+              });
+            } else {
+              xaxis.push({
+                type: 'category',
+                offset: index * 10,
+                axisTick: {
+                  alignWithLabel: true,
+                },
+                axisLine: {
+                
+                  onZero: true,
+                  lineStyle: {
+                      color: colors[index],
+                  },
+                },
+                data: [],
             });
+           }
             serieses.push({
               name: cols,
               type: 'line',

@@ -282,8 +282,9 @@
       },   
      changed() {
        const value = this.time1;
-        const startdate = moment(value[0]).format('YYYY-MM-DD HH:MM:SS');
-        const enddate = moment(value[1]).format('YYYY-MM-DD HH:MM:SS');
+        const startdate = moment(value[0]).subtract({ minutes: 1 }).format('YYYY-MM-DD HH:mm:ss');
+        const enddate = moment(value[1]).add({ minutes: 1 }).format('YYYY-MM-DD HH:mm:ss');
+        console.log(`${startdate}, ${enddate}`);
         this.getData({
             TimeString__gte: startdate,
             TimeString__lte: enddate,
@@ -292,7 +293,7 @@
       getData(params) {
         this.$vs.loading();
         axios.get(`http://${localStorage.ip}:${localStorage.port}/api/StatoImpianto`, {
-            params: params, // eslint-disable-line object-shorthand
+            params: { ...params, VarName: 'OPCUA_Produzione_StatoImpianto' }, // eslint-disable-line object-shorthand
           })
           // (Math.round(this.dateFromOADate(response.data.data[i].Time_ms
           //      / 1000000).getTime() / 1000))
@@ -301,7 +302,7 @@
           const one = [];
           const two = [];
           const three = [];
-           const arr = response.data.data;
+           const arr = response.data.data.reverse();
            arr.forEach((element, index) => {
             if (index > 0) { 
                const prev = arr[index - 1]; 
@@ -310,28 +311,28 @@
                   / 1000000).getTime() / 1000));
                 const curtim = (Math.round(this.dateFromOADate(element.Time_ms
                   / 1000000).getTime() / 1000));
-                one.push(curtim - prevtim);
+                one.push(Math.abs(curtim - prevtim));
                }
               if (element.VarValue === 2 || element.VarValue === '2') {
                 const prevtim = (Math.round(this.dateFromOADate(prev.Time_ms
                   / 1000000).getTime() / 1000));
                 const curtim = (Math.round(this.dateFromOADate(element.Time_ms
                   / 1000000).getTime() / 1000));
-                two.push(curtim - prevtim);
+                two.push(Math.abs(curtim - prevtim));
                }
               if (element.VarValue === 3 || element.VarValue === '3') {
                 const prevtim = (Math.round(this.dateFromOADate(prev.Time_ms
                   / 1000000).getTime() / 1000));
                 const curtim = (Math.round(this.dateFromOADate(element.Time_ms
                   / 1000000).getTime() / 1000));
-                three.push(curtim - prevtim);
+                three.push(Math.abs(curtim - prevtim));
                }
               if (element.VarValue === 0 || element.VarValue === '0') {
                 const prevtim = (Math.round(this.dateFromOADate(prev.Time_ms
                   / 1000000).getTime() / 1000));
                 const curtim = (Math.round(this.dateFromOADate(element.Time_ms
                   / 1000000).getTime() / 1000));
-                zero.push(curtim - prevtim);
+                zero.push(Math.abs(curtim - prevtim));
                }              
             }
            });
@@ -339,6 +340,7 @@
             this.one = one.reduce((a, b) => a + b, 0);
             this.two = two.reduce((a, b) => a + b, 0);
             this.three = three.reduce((a, b) => a + b, 0);
+            console.log(`zero: ${this.zero} one: ${this.one} two: ${this.two} three: ${this.three}`);
             this.temposolare = this.epochtohms(this.one + this.two + this.three + this.zero);
             this.tempodisponibilita = this.epochtohms(this.one + this.two + this.three);
             this.tempolavoro = this.epochtohms(this.two + this.three);
@@ -364,20 +366,16 @@
               .map((g) => _.mergeWith({}, ...g, (obj, src) =>
               _.isArray(obj) ? obj.concat(src) : undefined))
               .value();
-            let minvm = arr[0].OPCUA_Produzione_VITA_MACCHINA;
-            let maxvm = arr[0].OPCUA_Produzione_VITA_MACCHINA;
             let maxs = arr[0].OPCUA_Produzione_SCARTI;
             let mins = arr[0].OPCUA_Produzione_SCARTI;
             for (let i = 1, len = arr.length; i < len; i += 1) {
-              const vm = arr[i].OPCUA_Produzione_VITA_MACCHINA;
               const s = arr[i].OPCUA_Produzione_SCARTI;
-              minvm = (vm < minvm) ? vm : minvm;
-              maxvm = (vm > maxvm) ? vm : maxvm;
               mins = (s < mins) ? s : mins;
               maxs = (s > maxs) ? s : maxs;
             }
             this.PezziBuoni = this.calcb(arr);
-            this.VitaMacchina = (maxvm - minvm >= 0) ? maxvm - minvm : 0;
+            this.VitaMacchina = arr[arr.length - 1].OPCUA_Produzione_VITA_MACCHINA;      
+            console.log(this.VitaMacchina);
             this.PezziScarti = (maxs - mins >= 0) ? maxs - mins : 0;
             this.Resa = Math.round(this.PezziBuoni / (this.totaltim / 60));
             this.ResaNetta = Math.round(this.PezziBuoni / (this.totaltimnetto / 60));
