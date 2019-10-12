@@ -28,8 +28,11 @@
               <vs-select-item :key="index" :value="item.value" :text="item.text" v-for="item,index in options2" />
             </vs-select>
           </vs-col>
-          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
+          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">
             <vs-button color="primary" type="border" icon="print" v-on:click="print"></vs-button>
+          </vs-col>
+          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">
+            <vs-button color="primary" type="border" icon="replay" v-on:click="changed"></vs-button>
           </vs-col>
         </vs-row>
       </vs-collapse-item>

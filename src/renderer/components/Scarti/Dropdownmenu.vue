@@ -9,8 +9,11 @@
           <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="6">
             <date-picker label="Date" v-on:clear="clear" v-on:change="changed" v-model="time1" append-to-body range lang="it" format="YYYY-MM-DDTHH:mm:ss"></date-picker>
           </vs-col>
-          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="6">
+          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">
             <vs-button color="primary" type="border" icon="print" v-on:click="print"></vs-button>
+          </vs-col>
+          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">
+            <vs-button color="primary" type="border" icon="replay" v-on:click="changed"></vs-button>
           </vs-col>
         </vs-row>
       </vs-collapse-item>
@@ -40,8 +43,7 @@ import DatePicker from 'vue2-datepicker';
               time1: '',
             };
           },
-          mounted() {
-            console.log('test');              
+          mounted() {           
             this.loadItems();
           },
           methods: {

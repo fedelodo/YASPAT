@@ -17,8 +17,11 @@
               type="datetime">
             </date-picker>
           </vs-col>
-         <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="6">
+         <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">
             <vs-button color="primary" type="border" icon="print" v-on:click="print"></vs-button>
+          </vs-col>
+          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">
+            <vs-button color="primary" type="border" icon="replay" v-on:click="changed"></vs-button>
           </vs-col>
         </vs-row>
       </vs-collapse-item>
@@ -98,8 +101,7 @@ import DatePicker from 'vue2-datepicker';
               ],
             };
           },
-          mounted() {
-            console.log('test');              
+          mounted() {            
             this.loadItems();
           },
           methods: {

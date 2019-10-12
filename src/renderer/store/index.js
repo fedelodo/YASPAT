@@ -3,18 +3,13 @@ import Vuex from 'vuex';
 
 import { createPersistedState, createSharedMutations } from 'vuex-electron';
 
-import modules from './modules';
-
 Vue.use(Vuex);
-Vue.config.devtools = true;
 
 export default new Vuex.Store({
-  modules,
   plugins: [
     createPersistedState(),
     createSharedMutations(),
   ],
-  strict: process.env.NODE_ENV !== 'production',
   state: {
     date: '',
     msgnum: -1,
@@ -22,45 +17,29 @@ export default new Vuex.Store({
     ip: '0.0.0.0',
     port: 5000,
     resa: 1,
-  },
-  actions: {
-    updateip(context, payload) {
-      console.log(`selecting ip, ${payload}`);
-      context.commit('updateip', payload);
-    },
-    updateport(context, payload) {
-      console.log(`selecting port, ${payload}`);
-      context.commit('updateport', payload);
-    },
-  },
-  mutations: {
-    updateip(state, payload) {
-      console.log(`selecting ip, ${payload}`);
-      state.ip = payload;
-    },
-    updateport(state, payload) {
-      console.log(`selecting port, ${payload}`);
-      state.port = payload;
-    },
-    changedate(state, date) {
-      state.date = date;
-    },
-    changemsgnum(state, msgnum) {
-      state.msgnum = msgnum;
-    },
-    changemsgtext(state, msgtext) {
-      state.msgtext = msgtext;
-    },
-    changeresa(state, resa) {
-      state.resa = resa;
-    },
+    startdate: new Date().setHours(0, 0, 0),
+    enddate: new Date().setHours(23, 59, 59),
   },
   getters: {
-    ip: state => state.ip,
-    port: state => state.port,
-    date: state => state.date,
-    msgnum: state => state.msgnum,
-    msgtext: state => state.msgtext,
-    resa: state => state.resa,
+    // other getters
   },
+  mutations: {
+    set_startdate: (state, newValue) => {
+      state.startdate = newValue;
+    },
+
+    set_enddate: (state, newValue) => {
+      state.enddate = newValue;
+    },
+    // other mutations
+  },
+  actions: {
+    setStartDate: (context, newValue) => {
+      context.commit('set_startdate', newValue);
+    },
+
+    setEndDate: (context, newValue) => {
+      context.commit('set_enddate', newValue);
+    },
+  }, // other actions
 });

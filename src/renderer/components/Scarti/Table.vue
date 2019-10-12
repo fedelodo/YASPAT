@@ -65,7 +65,6 @@
           },
           methods: {
              onChildClick(value) {
-               console.log(value);
                 //  const starttim = value[0][0].toISOstring();
                 if (value.length > 2) {
                   const startdate = value[0][0].toISOString();
@@ -82,7 +81,6 @@
                       MsgText: value[1],
                   });
                 }
-                console.log(this);
                 this.loadItems();
               },
 
@@ -91,7 +89,6 @@
               },
       
               onPageChange(params) {
-                console.log(params);
                 this.updateParams({ __offset: (params.currentPage - 1) * params.currentPerPage });
                 this.loadItems();
               },

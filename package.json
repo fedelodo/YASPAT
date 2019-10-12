@@ -1,6 +1,6 @@
 {
   "name": "YASPAT",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "author": "Federico Lodovici",
   "description": "Yet Another Simple Production Analysis Tool",
   "license": "BSD-3-Clause",
@@ -61,6 +61,7 @@
     }
   },
   "dependencies": {
+    "@ionic/vue": "^0.0.4",
     "add": "^2.0.6",
     "axios": "^0.18.1",
     "echarts": "^4.2.1",

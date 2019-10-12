@@ -71,7 +71,6 @@
       },
     methods: {
       onChildClick(value) {
-        console.log(value);
         //  const starttim = value[0][0].toISOstring();
         const startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
         const enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
@@ -108,7 +107,6 @@
             DATA_FROM_BACKEND.columns = [...col];
                       DATA_FROM_BACKEND.columns = DATA_FROM_BACKEND.columns.filter(item => item !== 'TimeString');
            DATA_FROM_BACKEND.columns.forEach((cols, index) => {
-             console.log(cols);
             if (cols === 'OPCUA_Produzione_MediaProduzione_Resa1H') {
               xaxis.push({
                  type: 'category',
@@ -163,7 +161,6 @@
         });
         setTimeout(() => {
           this.loading = false;
-          console.log(this.option);
         }, 1000);
     },
   },

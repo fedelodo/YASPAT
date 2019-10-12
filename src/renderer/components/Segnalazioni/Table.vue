@@ -72,7 +72,6 @@
           onChildClick(value) {
                 let startdate;
                 let enddate;
-                console.log(value);
                 if (value[0] !== '') {
                   startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
                   enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
@@ -85,7 +84,6 @@
                   MsgNumber: value[1], 
                   MsgText__contains: value[2],
                   });
-                console.log(this);
                 this.loadItems();
               },
 
@@ -94,7 +92,6 @@
               },
       
               onPageChange(params) {
-                console.log(params);
                 this.updateParams({ __offset: (params.currentPage - 1) * params.currentPerPage });
                 this.loadItems();
               },

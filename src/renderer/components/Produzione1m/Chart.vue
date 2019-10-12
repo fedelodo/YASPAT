@@ -46,7 +46,6 @@
             TimeString__gte: startdate,
             TimeString__lte: enddate,
           });
-        console.log(`${startdate} - ${enddate}`);
       },
     getData(params) {
       this.loading = true;
@@ -67,7 +66,6 @@
             rows = _(rows).groupBy('TimeString').map((g) => _.mergeWith({}, ...g, (obj, src) =>
              _.isArray(obj) ? obj.concat(src) : undefined))
               .value();
-          console.log(rows);
 
             DATA_FROM_BACKEND.rows = rows.reverse();
             DATA_FROM_BACKEND.columns = [...col];
@@ -77,7 +75,6 @@
           this.dataEmpty = !this.chartData.rows.length;
           this.loading = false;
         }, 5000);
-      console.log(this.chartData);
     },
   },
   created() {

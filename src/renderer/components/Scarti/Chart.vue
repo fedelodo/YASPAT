@@ -37,7 +37,6 @@
   },
   methods: {
       onChildClick(value) {
-        console.log(value);
         //  const starttim = value[0][0].toISOstring();
         const startdate = value[0][0].toISOString();
         const enddate = value[0][1].toISOString();
@@ -58,7 +57,6 @@
           'TimeString', 'VarValue', 
         ];
         DATA_FROM_BACKEND.rows = response.data.data;
-        console.log(DATA_FROM_BACKEND);
       });
         setTimeout(() => {
           this.chartData = DATA_FROM_BACKEND;

@@ -26,7 +26,6 @@
     },
     methods: {
       forceRerender() {
-        console.log('Triggerato');
         this.reloadsidebar += 1;  
       },
     },

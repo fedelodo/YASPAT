@@ -101,7 +101,6 @@
       onChildClick(value) {
         let startdate;
         let enddate;
-        console.log(value);
         if (value[0] !== '') {
           startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
           enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
@@ -147,14 +146,8 @@
                 delete temp[num];
                 delete tempn[num];
                 if (!(Object.keys(tempn).length === 0 && tempn.constructor === Object)) {
-                  console.log('non vuoto');
                   Object.keys(tempn).forEach((v) => { tempn[v] = time; });
                 }
-                console.log('tempn:');
-                console.log(tempn);
-                console.log('temp:');
-                console.log(temp);
-                console.log(`res ${num}: ${result[num].tim}, ${time}`);
             }
             result[num].num = num;    
             result[num].text = (item.MsgText) ? item.MsgText : 'default';

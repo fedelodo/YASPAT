@@ -232,6 +232,8 @@
       };
     },
     name: 'main-page',
+    computed: {
+    },
     methods: {
       epochtohms(epoch) {
         const ore = Math.floor(epoch / 3600);
@@ -281,13 +283,12 @@
         this.$electron.shell.openExternal(link);
       },   
      changed() {
-       const value = this.time1;
-        const startdate = moment(value[0]).subtract({ minutes: 1 }).format('YYYY-MM-DD HH:mm:ss');
-        const enddate = moment(value[1]).add({ minutes: 1 }).format('YYYY-MM-DD HH:mm:ss');
-        console.log(`${startdate}, ${enddate}`);
+        const value = this.time1;
+        this.$store.dispatch('setStartDate', moment(value[0]).valueOf());
+        this.$store.dispatch('setEndDate', moment(value[1]).valueOf());
         this.getData({
-            TimeString__gte: startdate,
-            TimeString__lte: enddate,
+            TimeString__lte: moment(this.$store.state.enddate).format('YYYY-MM-DD HH:mm:ss'),
+            TimeString__gte: moment(this.$store.state.startdate).format('YYYY-MM-DD HH:mm:ss'),
           });
       },
       getData(params) {
@@ -340,7 +341,6 @@
             this.one = one.reduce((a, b) => a + b, 0);
             this.two = two.reduce((a, b) => a + b, 0);
             this.three = three.reduce((a, b) => a + b, 0);
-            console.log(`zero: ${this.zero} one: ${this.one} two: ${this.two} three: ${this.three}`);
             this.temposolare = this.epochtohms(this.one + this.two + this.three + this.zero);
             this.tempodisponibilita = this.epochtohms(this.one + this.two + this.three);
             this.tempolavoro = this.epochtohms(this.two + this.three);
@@ -375,7 +375,6 @@
             }
             this.PezziBuoni = this.calcb(arr);
             this.VitaMacchina = arr[arr.length - 1].OPCUA_Produzione_VITA_MACCHINA;      
-            console.log(this.VitaMacchina);
             this.PezziScarti = (maxs - mins >= 0) ? maxs - mins : 0;
             this.Resa = Math.round(this.PezziBuoni / (this.totaltim / 60));
             this.ResaNetta = Math.round(this.PezziBuoni / (this.totaltimnetto / 60));
@@ -401,14 +400,9 @@
     if (localStorage.resa) {
       this.number1 = localStorage.resa;
     }
-    const d = new Date();
-    const d1 = new Date();
-    d.setDate(d1.getDate());
-    d.setHours(0, 0, 0);
-    d1.setHours(23, 59, 0);
-    this.getData({
-      TimeString__lte: d1,
-      TimeString__gte: d,
+     this.getData({
+            TimeString__lte: moment(this.$store.state.enddate).format('YYYY-MM-DD HH:mm:ss'),
+            TimeString__gte: moment(this.$store.state.startdate).format('YYYY-MM-DD HH:mm:ss'),
     });
     },
   };

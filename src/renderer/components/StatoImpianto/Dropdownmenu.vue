@@ -28,8 +28,11 @@
               <vs-select-item :key="index" :value="item.value" :text="item.text" v-for="item,index in options2" />
             </vs-select>
           </vs-col>
-          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="4">
+          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">
             <vs-button color="primary" type="border" icon="print" v-on:click="print"></vs-button>
+          </vs-col>
+          <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">
+            <vs-button color="primary" type="border" icon="replay" v-on:click="changed"></vs-button>
           </vs-col>
         </vs-row>
       </vs-collapse-item>
@@ -41,7 +44,7 @@
 <script>
   import axios from 'axios';
   import DatePicker from 'vue2-datepicker';
-
+  import moment from 'moment';
 
   export default {
           components: { DatePicker },
@@ -110,42 +113,38 @@
             };
           },
           mounted() {
-           this.loadItems();
+           this.loadItems({
+            __sort: '-TimeString',
+            __limit: 100,
+          });
           },
           methods: {
-            loadItems() {                  
+            loadItems(params) {                  
               axios.get(`http://${localStorage.ip}:${localStorage.port}/api/StatoImpianto`, {
-                      params: { __limit: 20 }, // eslint-disable-line object-shorthand
+                      params: params, // eslint-disable-line object-shorthand
                       }).then((response) => {
-                      this.options1 = [{ text: '', value: '' }];
                       this.options2 = [{ text: '', value: '' }];
-                      this.options3 = [{ text: '', value: '' }];
                       const values2 = [...new Set(response.data.data.map(x => x.VarName))];
                       values2.forEach((value) => {
                         const text = value;
                         this.options2.push({ text, value });
                       });
-                      const values3 = [...new Set(response.data.data.map(x => x.VarValue))];
-                      values3.forEach((value) => {
-                        const text = value;
-                        this.options3.push({ text, value });
-                      });
-                      const values1 = [...new Set(response.data.data.map(x => 
-                                        x.TimeString.slice(0, 10)))];
-                      values1.forEach((value) => {
-                        const text = value;
-                        this.options1.push({ text, value });
-                      });
                   });
               },
             changed() {
+              const startdate = moment(this.time1[0]).format('YYYY-MM-DD HH:MM:SS');
+              const enddate = moment(this.time1[1]).format('YYYY-MM-DD HH:MM:SS');
+              this.loadItems({
+                  __sort: '-TimeString',
+                  TimeString__gte: startdate,
+                  TimeString__lte: enddate,
+                });
               this.select2 = (this.select2.length === 0) ? '' : this.select2;
               this.$emit('childToParent', [this.time1, this.select2]);
             },
 
             clear() {
               this.select2 = (this.select2.length === 0) ? '' : this.select2;
-              this.select3 = (this.select3.length === 0) ? '' : this.select3;
               this.$emit('childToParent', [this.select2, this.select3]);
             },
 
