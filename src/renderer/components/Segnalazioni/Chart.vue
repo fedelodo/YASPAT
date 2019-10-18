@@ -104,6 +104,8 @@
         if (value[0] !== '') {
           startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
           enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
+          this.$store.dispatch('changesdate', moment(value[0][0]).valueOf());
+          this.$store.dispatch('changeedate', moment(value[0][1]).valueOf());
         } 
         //  const starttim = value[0][0].toISOstring();
         this.getData({
@@ -194,7 +196,8 @@
   created() {
     this.getData({
       __sort: 'Time_ms',
-      TimeString__gte: moment().format('YYYY-MM-DD'),
+      TimeString__lte: moment(this.$store.state.Date.enddate).format('YYYY-MM-DD HH:mm:ss'),
+      TimeString__gte: moment(this.$store.state.Date.startdate).format('YYYY-MM-DD HH:mm:ss'),
       __limit: 100,
     });
   },

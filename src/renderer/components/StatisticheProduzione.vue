@@ -284,11 +284,11 @@
       },   
      changed() {
         const value = this.time1;
-        this.$store.dispatch('setStartDate', moment(value[0]).valueOf());
-        this.$store.dispatch('setEndDate', moment(value[1]).valueOf());
+        this.$store.dispatch('changesdate', moment(value[0]).valueOf());
+        this.$store.dispatch('changeedate', moment(value[1]).valueOf());
         this.getData({
-            TimeString__lte: moment(this.$store.state.enddate).format('YYYY-MM-DD HH:mm:ss'),
-            TimeString__gte: moment(this.$store.state.startdate).format('YYYY-MM-DD HH:mm:ss'),
+            TimeString__lte: moment(this.time1[1]).format('YYYY-MM-DD HH:mm:ss'),
+            TimeString__gte: moment(this.time1[0]).format('YYYY-MM-DD HH:mm:ss'),
           });
       },
       getData(params) {
@@ -397,12 +397,13 @@
     },
   },
   mounted() {
+    console.log(this.$store);
     if (localStorage.resa) {
       this.number1 = localStorage.resa;
     }
      this.getData({
-            TimeString__lte: moment(this.$store.state.enddate).format('YYYY-MM-DD HH:mm:ss'),
-            TimeString__gte: moment(this.$store.state.startdate).format('YYYY-MM-DD HH:mm:ss'),
+            TimeString__lte: moment(this.$store.state.Date.enddate).format('YYYY-MM-DD HH:mm:ss'),
+            TimeString__gte: moment(this.$store.state.Date.startdate).format('YYYY-MM-DD HH:mm:ss'),
     });
     },
   };

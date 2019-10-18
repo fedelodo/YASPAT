@@ -69,6 +69,8 @@
     this.getData({
             __sort: '-TimeString',
             __limit: 100,
+            TimeString__lte: moment(this.$store.state.Date.enddate).format('YYYY-MM-DD HH:mm:ss'),
+            TimeString__gte: moment(this.$store.state.Date.startdate).format('YYYY-MM-DD HH:mm:ss'),
     });
   },
   components: {

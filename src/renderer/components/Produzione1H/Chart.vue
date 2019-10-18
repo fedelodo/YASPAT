@@ -74,6 +74,8 @@
         //  const starttim = value[0][0].toISOstring();
         const startdate = moment(value[0][0]).format('YYYY-MM-DD HH:MM:SS');
         const enddate = moment(value[0][1]).format('YYYY-MM-DD HH:MM:SS');
+        this.$store.dispatch('changesdate', moment(value[0][0]).valueOf());
+        this.$store.dispatch('changeedate', moment(value[0][1]).valueOf());
         this.getData({
             __sort: '-TimeString',
             TimeString__gte: startdate,
@@ -168,6 +170,8 @@
     this.getData({
             __sort: '-TimeString',
             __limit: 100,
+            TimeString__lte: moment(this.$store.state.Date.enddate).format('YYYY-MM-DD HH:mm:ss'),
+            TimeString__gte: moment(this.$store.state.Date.startdate).format('YYYY-MM-DD HH:mm:ss'),
     });
   },
   components: {

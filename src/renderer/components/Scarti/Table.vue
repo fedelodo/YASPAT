@@ -69,6 +69,8 @@
                 if (value.length > 2) {
                   const startdate = value[0][0].toISOString();
                   const enddate = value[0][1].toISOString();
+                  this.$store.dispatch('changesdate', moment(value[0][0]).valueOf());
+                  this.$store.dispatch('changeedate', moment(value[0][1]).valueOf());
                   this.updateParams({
                     TimeString__gte: startdate,
                     TimeString__lte: enddate, 
