@@ -52,7 +52,7 @@ export default new Router({
     },
     {
       path: '/',
-      redirect: '/Segnalazioni',
+      redirect: '/Statistiche',
     },
   ],
 });

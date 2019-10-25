@@ -198,7 +198,6 @@
       __sort: 'Time_ms',
       TimeString__lte: moment(this.$store.state.Date.enddate).format('YYYY-MM-DD HH:mm:ss'),
       TimeString__gte: moment(this.$store.state.Date.startdate).format('YYYY-MM-DD HH:mm:ss'),
-      __limit: 100,
     });
   },
   components: {

@@ -106,7 +106,12 @@ import DatePicker from 'vue2-datepicker';
           },
           methods: {
             loadItems() {                  
-              axios.get(`http://${localStorage.ip}:${localStorage.port}/api/Produzione1H`).then((response) => {
+              axios.get(`http://${localStorage.ip}:${localStorage.port}/api/Produzione1H`, {
+                      params: { 
+                        TimeString__lte: moment(this.$store.state.Date.enddate).format('YYYY-MM-DD HH:mm:ss'),
+                        TimeString__gte: moment(this.$store.state.Date.startdate).format('YYYY-MM-DD HH:mm:ss'),
+                        },
+                      }).then((response) => {
                       this.options1 = [{ text: '', value: '' }];
                       this.options2 = [{ text: '', value: '' }];
                       this.options3 = [{ text: '', value: '' }];
