@@ -7,7 +7,13 @@
        </div>
         <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
           <vs-col vs-type="flex" vs-justify="center" vs-align="center" vs-w="6">
-            <date-picker label="Date" v-on:clear="clear" v-on:change="changed" v-model="time1" append-to-body range lang="it" format="YYYY-MM-DDTHH:mm:ss"></date-picker>
+            <date-picker label="Date"
+             v-on:clear="clear" 
+             v-on:change="changed"
+              v-model="time1" 
+              confirm = "true"
+              append-to-body range lang="it" 
+              format="YYYY-MM-DDTHH:mm:ss"></date-picker>
           </vs-col>
           <vs-col  vs-type="flex" vs-justify="center" vs-align="center" vs-w="2">
             <vs-button color="primary" type="border" icon="print" v-on:click="print"></vs-button>

@@ -7,13 +7,22 @@
               v-on:change="changed" 
               v-model="time1" 
               append-to-body
+              confirm = "true"
               range :shortcuts="shortcuts" lang="it"
               format="YYYY-MM-DD HH:mm" 
               type="datetime">
             </date-picker>
           </vs-col>
       </vs-row>
-      <vs-divider/>
+      <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
+        <vs-col  vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <p > Intervallo attuale </p> 
+        </vs-col>
+        <vs-col  vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
+          <span> {{ startdate }} - {{ enddate }} </span> 
+        </vs-col>
+      </vs-row>
+    <vs-divider/>
     <div style="font-size:120%;">
       <vs-row vs-w="12" vs-align="flex-start" vs-type="flex" vs-justify="center" >
         <vs-col  vs-w="6" vs-type="flex" vs-justify="center" vs-align="center">
@@ -153,6 +162,8 @@
         },
       };
       return {
+        startdate: moment(this.$store.state.Date.startdate).format('YYYY-MM-DD HH:mm:ss'),
+        enddate: moment(this.$store.state.Date.enddate).format('YYYY-MM-DD HH:mm:ss'),
         rate: 0,
         VitaMacchina: 0,
         PezziBuoni: 0,
@@ -286,6 +297,8 @@
         const value = this.time1;
         this.$store.dispatch('changesdate', moment(value[0]).valueOf());
         this.$store.dispatch('changeedate', moment(value[1]).valueOf());
+        this.enddate = moment(this.time1[1]).format('YYYY-MM-DD HH:mm:ss');
+        this.startdate = moment(this.time1[0]).format('YYYY-MM-DD HH:mm:ss');
         this.getData({
             TimeString__lte: moment(this.time1[1]).format('YYYY-MM-DD HH:mm:ss'),
             TimeString__gte: moment(this.time1[0]).format('YYYY-MM-DD HH:mm:ss'),
@@ -349,7 +362,7 @@
             this.totaltimnetto = (this.three) / 60;
             setTimeout(() => {
               this.$vs.loading.close();
-            }, 2000);
+            }, 500);
           });
         axios.get(`http://${localStorage.ip}:${localStorage.port}/api/Produzione1m`, {
             params: params, // eslint-disable-line object-shorthand
@@ -392,7 +405,7 @@
             };
             setTimeout(() => {
               this.$vs.loading.close();
-            }, 2000);
+            }, 500);
         });
     },
   },

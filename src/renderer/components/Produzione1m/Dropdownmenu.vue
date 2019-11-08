@@ -12,6 +12,7 @@
               v-on:change="changed" 
               v-model="time1" 
               append-to-body
+              confirm = "true"
               range :shortcuts="shortcuts" lang="it"
               format="YYYY-MM-DD HH:mm" 
               type="datetime">
