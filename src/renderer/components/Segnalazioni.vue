@@ -1,14 +1,14 @@
 <template>
 <vs-row>
     <vs-tabs alignment="fixed">
-      <vs-tab label="Tabella">
-        <div>
-          <Table></Table>
-        </div>
-      </vs-tab>
       <vs-tab label="Grafico">
         <div>
           <Chart></Chart>
+        </div>
+      </vs-tab>
+      <vs-tab label="Tabella">
+        <div>
+          <Table></Table>
         </div>
       </vs-tab>
     </vs-tabs>

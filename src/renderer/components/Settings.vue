@@ -64,6 +64,10 @@
         <label class="label" for="">Informazioni Pezzi Prodotti</label>
         <vs-switch v-model="IPP"/>
       </vs-col>
+      <vs-col class="impschede" vs-type="flex" vs-justify="center" vs-align="center" vs-w="6">
+        <label class="label" for="">Real Time</label>
+        <vs-switch v-model="RealTime"/>
+      </vs-col>
     </vs-row>  
     <vs-divider /> 
     <vs-row> 
@@ -90,6 +94,7 @@
         StatoImpianto: false, 
         DatiAnalogici: false,
         IPP: false,
+        RealTime: false,
         resa: 1,
       };
   },
@@ -129,6 +134,9 @@
     if (localStorage.IPP) {
       this.IPP = localStorage.getItem('IPP') === 'true';
     }
+    if (localStorage.RealTime) {
+      this.RealTime = localStorage.getItem('RealTime') === 'true';
+    }
   },
 
   methods: {
@@ -144,6 +152,7 @@
       localStorage.ip = this.ip;
       localStorage.port = this.port;
       localStorage.resa = this.resa;
+      localStorage.RealTime = this.RealTime;
       this.$parent.forceRerender();
     },
   },

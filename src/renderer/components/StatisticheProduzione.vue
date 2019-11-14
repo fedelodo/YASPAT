@@ -305,7 +305,7 @@
           });
       },
       getData(params) {
-        this.$vs.loading();
+        // this.$vs.loading();
         axios.get(`http://${localStorage.ip}:${localStorage.port}/api/StatoImpianto`, {
             params: { ...params, VarName: 'OPCUA_Produzione_StatoImpianto' }, // eslint-disable-line object-shorthand
           })
@@ -407,7 +407,8 @@
               this.$vs.loading.close();
             }, 500);
         });
-    },
+        this.$vs.loading.close();
+      },
   },
   mounted() {
     console.log(this.$store);

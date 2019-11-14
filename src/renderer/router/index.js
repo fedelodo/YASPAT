@@ -51,6 +51,11 @@ export default new Router({
       component: require('@/components/StatoImpianto').default,
     },
     {
+      path: '/RealTime',
+      name: 'RealTime',
+      component: require('@/components/RealTime').default,
+    },
+    {
       path: '/',
       redirect: '/Statistiche',
     },

@@ -31,9 +31,6 @@
 
   export default {
   data() {
-    this.chartSettings = {
-        xAxisType: 'time',
-      };
     this.chartExtend = {
       series: {
         smooth: false,

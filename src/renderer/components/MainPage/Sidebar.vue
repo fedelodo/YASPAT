@@ -38,6 +38,9 @@
         <vs-sidebar-item  v-show="IPP" index="8"  :to="{ name: 'IPP'}" icon="help">
           Informazioni Pezzi Prodotti
         </vs-sidebar-item>
+        <vs-sidebar-item  v-show="RealTime" index="9"  :to="{ name: 'RealTime'}" icon="help">
+          Real Time
+        </vs-sidebar-item>
 
       <div class="footer-sidebar" slot="footer">
         <vs-button icon="settings" :to="{ name: 'Impostazioni'}" color="primary" type="border"></vs-button>
@@ -77,6 +80,7 @@
       StatoImpianto: false,
       IPP: false,
       DatiAnalogici: false,
+      RealTime: false,
     }),
     mounted() {
       if (localStorage.Statistiche) {
@@ -102,6 +106,9 @@
       }
       if (localStorage.DatiAnalogici) {
         this.DatiAnalogici = localStorage.getItem('DatiAnalogici') === 'true';
+      }
+      if (localStorage.RealTime) {
+        this.RealTime = localStorage.getItem('RealTime') === 'true';
       }
     },
   };
