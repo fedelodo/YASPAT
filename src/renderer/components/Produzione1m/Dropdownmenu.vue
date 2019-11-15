@@ -45,7 +45,7 @@
 <script>
   import axios from 'axios';
   import DatePicker from 'vue2-datepicker';
-
+  import moment from 'moment';
 
   export default {
           components: { DatePicker },
