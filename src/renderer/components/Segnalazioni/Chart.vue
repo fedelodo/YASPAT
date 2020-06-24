@@ -161,7 +161,7 @@
         });
 
         let perc = arrval.reduce((result, item) => {
-          totaltim += (item.timn || 0); 
+          totaltim += (item.tim || 0); 
           return totaltim;
          }, []);
 
