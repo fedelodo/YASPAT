@@ -360,11 +360,7 @@
             this.tempolavoronetto = this.epochtohms(this.three);
             this.totaltim = (this.three + this.two) / 60;
             this.totaltimnetto = (this.three) / 60;
-            setTimeout(() => {
-              this.$vs.loading.close();
-            }, 500);
-          });
-        axios.get(`http://${localStorage.ip}:${localStorage.port}/api/Produzione1m`, {
+            axios.get(`http://${localStorage.ip}:${localStorage.port}/api/Produzione1m`, {
             params: params, // eslint-disable-line object-shorthand
           })
           .then((response) => {
@@ -390,7 +386,8 @@
             this.VitaMacchina = arr[arr.length - 1].OPCUA_Produzione_VITA_MACCHINA;      
             this.PezziScarti = (maxs - mins >= 0) ? maxs - mins : 0;
             this.Resa = Math.round(this.PezziBuoni / (this.totaltim / 60));
-            this.ResaNetta = Math.round(this.PezziBuoni / (this.totaltimnetto / 60));
+            this.ResaNetta = (this.totaltimnetto > 0) ?
+             Math.round(this.PezziBuoni / (this.totaltimnetto / 60)) : 0;
             this.chartData = {
               columns: ['type', 'value'],
               rows: [
@@ -407,6 +404,11 @@
               this.$vs.loading.close();
             }, 500);
         });
+            setTimeout(() => {
+              this.$vs.loading.close();
+            }, 500);
+          });
+        
         this.$vs.loading.close();
       },
   },
