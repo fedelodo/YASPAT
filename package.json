@@ -135,7 +135,7 @@
     "node-sass": "^4.9.2",
     "require-dir": "^1.0.0",
     "sass-loader": "^7.0.3",
-    "semantic-release": "^15.13.24",
+    "semantic-release": "^17.2.3",
     "spectron": "^3.8.0",
     "style-loader": "^0.21.0",
     "stylus": "^0.54.5",
